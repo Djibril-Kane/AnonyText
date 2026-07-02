@@ -1,0 +1,52 @@
+options
+{
+    STATIC = false;
+    IGNORE_CASE = false;
+    // Chemin relatif au repertoire depuis lequel "javacc" est lance (racine du depot).
+    // Defini ici plutot qu'en ligne de commande car JavaCC exige des guillemets doubles
+    // autour des valeurs de type chaine sur la CLI (ex. -OUTPUT_DIRECTORY="generated"),
+    // ce qui est source d'erreurs selon le shell (bash/PowerShell/cmd).
+    OUTPUT_DIRECTORY = "generated";
+}
+
+PARSER_BEGIN(Anonymiseur)
+
+import java.io.*;
+
+public class Anonymiseur
+{
+    public static void main(String[] args) throws Exception
+    {
+        if (args.length != 2)
+        {
+            System.out.println("Usage: java Anonymiseur <fichier_entree> <fichier_sortie>");
+            return;
+        }
+
+        // TODO (Membre C - partie 14) : ouverture du fichier d'entree
+        // TODO (Membre B - partie 18) : methode logToken() (affichage type de token + lexeme)
+        // TODO (Membre C - parties 15-17) : generation des tokens, logique d'anonymisation
+        //                                    et ecriture du fichier de sortie
+    }
+}
+
+PARSER_END(Anonymiseur)
+
+SKIP :
+{
+    " "
+  | "\t"
+  | "\r"
+  | "\n"
+}
+
+// TODO (Membre B - parties 8-9) : definitions des tokens EMAIL, PHONE, DATE, AMOUNT, PERSON, WORD, OTHER
+// Ordre de priorite lexicale (maximal munch) a respecter :
+// EMAIL > PHONE > DATE > AMOUNT > PERSON > WORD > OTHER (du plus specifique au plus generique)
+
+// TODO (Membre C - partie 13) : grammaire BNF acceptant toute suite valide de tokens
+void Start() :
+{}
+{
+    <EOF>
+}
