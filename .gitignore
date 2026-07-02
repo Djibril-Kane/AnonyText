@@ -1,12 +1,7 @@
-# Fichiers generes par "javacc" + "javac" (option "propre" retenue par l'equipe,
-# cf. README : chacun regenere localement avant de compiler)
-generated/*
-!generated/.gitkeep
+*.class
 
 # Fichiers anonymises produits a l'execution (non versionnes)
 output/*
 !output/.gitkeep
 
-# Divers
-*.class
 .DS_Store

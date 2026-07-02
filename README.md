@@ -21,7 +21,7 @@ AnonyText/
 ├── src/
 │   └── Anonymiseur.jj              # fichier source UNIQUE : options + tokens + grammaire + main
 │
-├── generated/                      # sortie de "javacc" (non versionnée, voir ci-dessous)
+├── generated/                      # sortie de "javacc" : .java versionnés, .class ignorés (.gitignore)
 │
 ├── tests/                          # fichiers de test (*.txt)
 │
