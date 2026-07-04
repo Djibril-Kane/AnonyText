@@ -8,6 +8,20 @@ public interface AnonymiseurConstants {
 
   /** End of File. */
   int EOF = 0;
+  /** RegularExpression Id. */
+  int EMAIL = 5;
+  /** RegularExpression Id. */
+  int PHONE = 6;
+  /** RegularExpression Id. */
+  int DATE = 7;
+  /** RegularExpression Id. */
+  int AMOUNT = 8;
+  /** RegularExpression Id. */
+  int PERSON = 9;
+  /** RegularExpression Id. */
+  int WORD = 10;
+  /** RegularExpression Id. */
+  int OTHER = 11;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -19,6 +33,13 @@ public interface AnonymiseurConstants {
     "\"\\t\"",
     "\"\\r\"",
     "\"\\n\"",
+    "<EMAIL>",
+    "<PHONE>",
+    "<DATE>",
+    "<AMOUNT>",
+    "<PERSON>",
+    "<WORD>",
+    "<OTHER>",
   };
 
 }

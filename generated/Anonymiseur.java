@@ -4,23 +4,38 @@ import java.io.*;
 public class Anonymiseur implements AnonymiseurConstants {
     public static void main(String[] args) throws Exception
     {
-        if (args.length != 2)
+        if (args.length < 1)
         {
-            System.out.println("Usage: java Anonymiseur <fichier_entree> <fichier_sortie>");
+            System.out.println("Usage: java Anonymiseur <fichier_entree>");
             return;
         }
 
-        // TODO (Membre C - partie 14) : ouverture du fichier d'entree
-        // TODO (Membre B - partie 18) : methode logToken() (affichage type de token + lexeme)
-        // TODO (Membre C - parties 15-17) : generation des tokens, logique d'anonymisation
-        //                                    et ecriture du fichier de sortie
+        // Ouverture du fichier d'entree pour ton test du Lexer
+        FileInputStream fis = new FileInputStream(args[0]);
+        Anonymiseur lexer = new Anonymiseur(fis);
+
+        System.out.println("--- DEBUT DE L'ANALYSE LEXICALE (INSTRUMENTATION TACHE 18) ---");
+
+        Token t;
+        // Boucle d'instrumentation (Partie 18)
+        while ((t = lexer.getNextToken()).kind != AnonymiseurConstants.EOF)
+        {
+            logToken(t);
+        }
+
+        System.out.println("--- FIN DE L'ANALYSE LEXICALE ---");
+
+        fis.close();
     }
 
-// TODO (Membre B - parties 8-9) : definitions des tokens EMAIL, PHONE, DATE, AMOUNT, PERSON, WORD, OTHER
-// Ordre de priorite lexicale (maximal munch) a respecter :
-// EMAIL > PHONE > DATE > AMOUNT > PERSON > WORD > OTHER (du plus specifique au plus generique)
+    // Tâche 18 : Méthode d'instrumentation pour afficher le type de token et le lexème
+    public static void logToken(Token t)
+    {
+        String typeToken = AnonymiseurConstants.tokenImage[t.kind];
+        System.out.println("DEBUG [Lexer] -> Type: " + typeToken + " | Lex\u00e8me: \u005c"" + t.image + "\u005c"");
+    }
 
-// TODO (Membre C - partie 13) : grammaire BNF acceptant toute suite valide de tokens
+// Grammaire BNF minimale (laissée vide pour le Membre C, partie 13)
   final public void Start() throws ParseException {
     jj_consume_token(0);
   }
@@ -157,7 +172,7 @@ public class Anonymiseur implements AnonymiseurConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[5];
+    boolean[] la1tokens = new boolean[12];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -171,7 +186,7 @@ public class Anonymiseur implements AnonymiseurConstants {
         }
       }
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 12; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
