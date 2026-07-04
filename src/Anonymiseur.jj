@@ -2,10 +2,6 @@ options
 {
     STATIC = false;
     IGNORE_CASE = false;
-    // Chemin relatif au repertoire depuis lequel "javacc" est lance (racine du depot).
-    // Defini ici plutot qu'en ligne de commande car JavaCC exige des guillemets doubles
-    // autour des valeurs de type chaine sur la CLI (ex. -OUTPUT_DIRECTORY="generated"),
-    // ce qui est source d'erreurs selon le shell (bash/PowerShell/cmd).
     OUTPUT_DIRECTORY = "generated";
 }
 
@@ -17,16 +13,35 @@ public class Anonymiseur
 {
     public static void main(String[] args) throws Exception
     {
-        if (args.length != 2)
+        if (args.length < 1)
         {
-            System.out.println("Usage: java Anonymiseur <fichier_entree> <fichier_sortie>");
+            System.out.println("Usage: java Anonymiseur <fichier_entree>");
             return;
         }
 
-        // TODO (Membre C - partie 14) : ouverture du fichier d'entree
-        // TODO (Membre B - partie 18) : methode logToken() (affichage type de token + lexeme)
-        // TODO (Membre C - parties 15-17) : generation des tokens, logique d'anonymisation
-        //                                    et ecriture du fichier de sortie
+        // Ouverture du fichier d'entree pour ton test du Lexer
+        FileInputStream fis = new FileInputStream(args[0]);
+        Anonymiseur lexer = new Anonymiseur(fis);
+
+        System.out.println("--- DEBUT DE L'ANALYSE LEXICALE (INSTRUMENTATION TACHE 18) ---");
+        
+        Token t;
+        // Boucle d'instrumentation (Partie 18)
+        while ((t = lexer.getNextToken()).kind != AnonymiseurConstants.EOF)
+        {
+            logToken(t);
+        }
+
+        System.out.println("--- FIN DE L'ANALYSE LEXICALE ---");
+        
+        fis.close();
+    }
+
+    // Tâche 18 : Méthode d'instrumentation pour afficher le type de token et le lexème
+    public static void logToken(Token t)
+    {
+        String typeToken = AnonymiseurConstants.tokenImage[t.kind];
+        System.out.println("DEBUG [Lexer] -> Type: " + typeToken + " | Lexème: \"" + t.image + "\"");
     }
 }
 
@@ -40,11 +55,46 @@ SKIP :
   | "\n"
 }
 
-// TODO (Membre B - parties 8-9) : definitions des tokens EMAIL, PHONE, DATE, AMOUNT, PERSON, WORD, OTHER
-// Ordre de priorite lexicale (maximal munch) a respecter :
-// EMAIL > PHONE > DATE > AMOUNT > PERSON > WORD > OTHER (du plus specifique au plus generique)
+// Tâches 8-9 : Définition des tokens selon l'ordre exact de priorité du document du Membre A
+TOKEN :
+{
+    < EMAIL:
+        (["a"-"z","A"-"Z","0"-"9",".","_","%","+","-"])+
+        "@"
+        (["a"-"z","A"-"Z","0"-"9","-"])+
+        ("." (["a"-"z","A"-"Z","0"-"9","-"])+)*
+        "." (["a"-"z","A"-"Z"]){2,}
+    >
+  | < PHONE:
+        ("+221" (" ")?)?
+        "7" ["0"-"8"] (" ")?
+        (["0"-"9"]){3} (" ")?
+        (["0"-"9"]){2} (" ")?
+        (["0"-"9"]){2}
+    >
+  | < DATE:
+        (["0"-"2"] ["0"-"9"] | "3" ["0"-"1"])
+        "/"
+        ("0" ["1"-"9"] | "1" ["0"-"2"])
+        "/"
+        (["0"-"9"]){4}
+    >
+  | < AMOUNT:
+        (["0"-"9"]){1,3} ((" ") (["0"-"9"]){3})*
+        (" ")?
+        ("FCFA" | "EUR" | "USD" | "€" | "$")
+    >
+  | < PERSON:
+        ["A"-"Z","À","Â","Ä","É","È","Ê","Ë","Î","Ï","Ô","Ö","Ù","Û","Ü","Ç"]
+        (["a"-"z","à","â","ä","é","è","ê","ë","î","ï","ô","ö","ù","û","ü","ç"])*
+    >
+  | < WORD:
+        (["a"-"z","à","â","ä","é","è","ê","ë","î","ï","ô","ö","ù","û","ü","ç"])+
+    >
+  | < OTHER: ~["\0"] >
+}
 
-// TODO (Membre C - partie 13) : grammaire BNF acceptant toute suite valide de tokens
+// Grammaire BNF minimale (laissée vide pour le Membre C, partie 13)
 void Start() :
 {}
 {
