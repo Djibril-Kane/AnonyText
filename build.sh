@@ -9,7 +9,7 @@ set -e
 # "dirname $0" non quote qui casse le chemin vers javacc.jar. On contourne donc ce
 # script en appelant nous-memes le jar, avec un chemin correctement quote.
 JAVACC_JAR="$(dirname "$(command -v javacc)")/lib/javacc.jar"
-java -classpath "$JAVACC_JAR" javacc src/Anonymiseur.jj
+java -Dfile.encoding=UTF-8 -classpath "$JAVACC_JAR" javacc src/Anonymiseur.jj
 
 # 2. Compiler les .java generes
 cd generated
