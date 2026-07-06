@@ -72,7 +72,9 @@ Exemples reconnus : `15/06/2026`, `01/01/2000`, `31/12/2025`.
 >
 ```
 
-Exemples reconnus : `250000 FCFA`, `250 000 FCFA`, `1000€`, `$100`, `2500 USD`.
+Exemples reconnus : `250000 FCFA`, `250 000 FCFA`, `1000€`, `2500 USD`.
+
+Note : la devise en préfixe (ex. `$100`) est hors périmètre — cf. Partie 1, difficulté n°4 : le choix retenu se limite au format « nombre puis devise », conformément à l'exemple officiel du sujet.
 
 ### PERSON
 
