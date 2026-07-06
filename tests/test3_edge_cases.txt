@@ -1,0 +1,9 @@
+Cas limites :
+Email sans domaine valide : test@
+Téléphone incomplet : 77 12 34
+Date invalide : 32/13/2026
+Montant sans devise : 250000
+Mot accentué minuscule : éléphant, liberté
+Nom accentué majuscule : Éric Étienne
+Numéro compact : 771234567
+Montant en euros : 1500 EUR

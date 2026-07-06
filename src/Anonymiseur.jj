@@ -11,51 +11,42 @@ import java.io.*;
 
 public class Anonymiseur
 {
+    // Tâches 14 & 17 : lecture du fichier d'entrée, écriture du fichier anonymisé
     public static void main(String[] args) throws Exception
     {
-        if (args.length < 1)
+        if (args.length < 2)
         {
-            System.out.println("Usage: java Anonymiseur <fichier_entree>");
+            System.out.println("Usage: java Anonymiseur <fichier_entree> <fichier_sortie>");
             return;
         }
 
-        // Ouverture du fichier d'entree pour ton test du Lexer
         FileInputStream fis = new FileInputStream(args[0]);
-        Anonymiseur lexer = new Anonymiseur(fis);
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF-8"));
+        Anonymiseur parser = new Anonymiseur(fis, "UTF-8");
 
-        System.out.println("--- DEBUT DE L'ANALYSE LEXICALE (INSTRUMENTATION TACHE 18) ---");
-        
-        Token t;
-        // Boucle d'instrumentation (Partie 18)
-        while ((t = lexer.getNextToken()).kind != AnonymiseurConstants.EOF)
-        {
-            logToken(t);
-        }
+        System.out.println("--- DEBUT ANALYSE (Tâche 18) ---");
+        parser.Start(out);
+        System.out.println("--- FIN ANALYSE ---");
+        System.out.println("Fichier anonymisé produit : " + args[1]);
 
-        System.out.println("--- FIN DE L'ANALYSE LEXICALE ---");
-        
+        out.close();
         fis.close();
     }
 
-    // Tâche 18 : Méthode d'instrumentation pour afficher le type de token et le lexème
+    // Tâche 18 : afficher le type et le lexème de chaque token reconnu (hors espaces)
     public static void logToken(Token t)
     {
-        String typeToken = AnonymiseurConstants.tokenImage[t.kind];
-        System.out.println("DEBUG [Lexer] -> Type: " + typeToken + " | Lexème: \"" + t.image + "\"");
+        if (t.image.trim().isEmpty()) return;
+        String type = AnonymiseurConstants.tokenImage[t.kind];
+        System.out.println("  [" + type + "] \"" + t.image + "\"");
     }
 }
 
 PARSER_END(Anonymiseur)
 
-SKIP :
-{
-    " "
-  | "\t"
-  | "\r"
-  | "\n"
-}
+// Pas de SKIP : espaces et sauts de ligne sont capturés par OTHER et recopiés tels quels.
 
-// Tâches 8-9 : Définition des tokens selon l'ordre exact de priorité du document du Membre A
+// Tâches 8-9 : tokens dans l'ordre de priorité (du plus spécifique au plus générique)
 TOKEN :
 {
     < EMAIL:
@@ -80,23 +71,35 @@ TOKEN :
         (["0"-"9"]){4}
     >
   | < AMOUNT:
-        (["0"-"9"]){1,3} ((" ") (["0"-"9"]){3})*
+        // Correction intégration : (["0"-"9"])+ au lieu de {1,3} pour couvrir "250000 FCFA"
+        (["0"-"9"])+ ((" ") (["0"-"9"]){3})*
         (" ")?
         ("FCFA" | "EUR" | "USD" | "€" | "$")
     >
   | < PERSON:
-        ["A"-"Z","À","Â","Ä","É","È","Ê","Ë","Î","Ï","Ô","Ö","Ù","Û","Ü","Ç"]
-        (["a"-"z","à","â","ä","é","è","ê","ë","î","ï","ô","ö","ù","û","ü","ç"])*
+        ["A"-"Z","À","Â","Ä","Ç","È","É","Ê","Ë","Î","Ï","Ô","Ö","Ù","Û","Ü"]
+        (["a"-"z","à","â","ä","ç","è","é","ê","ë","î","ï","ô","ö","ù","û","ü"])*
     >
   | < WORD:
-        (["a"-"z","à","â","ä","é","è","ê","ë","î","ï","ô","ö","ù","û","ü","ç"])+
+        (["a"-"z","à","â","ä","ç","è","é","ê","ë","î","ï","ô","ö","ù","û","ü"])+
     >
   | < OTHER: ~["\0"] >
 }
 
-// Grammaire BNF minimale (laissée vide pour le Membre C, partie 13)
-void Start() :
-{}
+// Tâche 13 : grammaire BNF acceptant toute suite valide de tokens.
+// Tâches 15-16 : chaque token sensible est substitué par son marqueur anonymisé.
+void Start(PrintWriter out) :
+{ Token t; }
 {
+    (
+        t=<EMAIL>    { out.print("<EMAIL>");      logToken(t); }
+      | t=<PHONE>    { out.print("<TELEPHONE>"); logToken(t); }
+      | t=<DATE>     { out.print("<DATE>");       logToken(t); }
+      | t=<AMOUNT>   { out.print("<MONTANT>");    logToken(t); }
+      | t=<PERSON>   { out.print("<PERSONNE>");   logToken(t); }
+      | t=<WORD>     { out.print(t.image);        logToken(t); }
+      | t=<OTHER>    { out.print(t.image);        logToken(t); }
+    )*
     <EOF>
+    { out.flush(); }
 }

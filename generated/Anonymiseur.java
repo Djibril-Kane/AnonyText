@@ -2,42 +2,93 @@
 import java.io.*;
 
 public class Anonymiseur implements AnonymiseurConstants {
+    // Tâches 14 & 17 : lecture du fichier d'entrée, écriture du fichier anonymisé
     public static void main(String[] args) throws Exception
     {
-        if (args.length < 1)
+        if (args.length < 2)
         {
-            System.out.println("Usage: java Anonymiseur <fichier_entree>");
+            System.out.println("Usage: java Anonymiseur <fichier_entree> <fichier_sortie>");
             return;
         }
 
-        // Ouverture du fichier d'entree pour ton test du Lexer
         FileInputStream fis = new FileInputStream(args[0]);
-        Anonymiseur lexer = new Anonymiseur(fis);
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF-8"));
+        Anonymiseur parser = new Anonymiseur(fis, "UTF-8");
 
-        System.out.println("--- DEBUT DE L'ANALYSE LEXICALE (INSTRUMENTATION TACHE 18) ---");
+        System.out.println("--- DEBUT ANALYSE (T\u00e2che 18) ---");
+        parser.Start(out);
+        System.out.println("--- FIN ANALYSE ---");
+        System.out.println("Fichier anonymis\u00e9 produit : " + args[1]);
 
-        Token t;
-        // Boucle d'instrumentation (Partie 18)
-        while ((t = lexer.getNextToken()).kind != AnonymiseurConstants.EOF)
-        {
-            logToken(t);
-        }
-
-        System.out.println("--- FIN DE L'ANALYSE LEXICALE ---");
-
+        out.close();
         fis.close();
     }
 
-    // Tâche 18 : Méthode d'instrumentation pour afficher le type de token et le lexème
+    // Tâche 18 : afficher le type et le lexème de chaque token reconnu (hors espaces)
     public static void logToken(Token t)
     {
-        String typeToken = AnonymiseurConstants.tokenImage[t.kind];
-        System.out.println("DEBUG [Lexer] -> Type: " + typeToken + " | Lex\u00e8me: \u005c"" + t.image + "\u005c"");
+        if (t.image.trim().isEmpty()) return;
+        String type = AnonymiseurConstants.tokenImage[t.kind];
+        System.out.println("  [" + type + "] \u005c"" + t.image + "\u005c"");
     }
 
-// Grammaire BNF minimale (laissée vide pour le Membre C, partie 13)
-  final public void Start() throws ParseException {
+// Tâche 13 : grammaire BNF acceptant toute suite valide de tokens.
+// Tâches 15-16 : chaque token sensible est substitué par son marqueur anonymisé.
+  final public void Start(PrintWriter out) throws ParseException {
+  Token t;
+    label_1:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case EMAIL:
+      case PHONE:
+      case DATE:
+      case AMOUNT:
+      case PERSON:
+      case WORD:
+      case OTHER:
+        ;
+        break;
+      default:
+        jj_la1[0] = jj_gen;
+        break label_1;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case EMAIL:
+        t = jj_consume_token(EMAIL);
+                       out.print("<EMAIL>");      logToken(t);
+        break;
+      case PHONE:
+        t = jj_consume_token(PHONE);
+                       out.print("<TELEPHONE>"); logToken(t);
+        break;
+      case DATE:
+        t = jj_consume_token(DATE);
+                       out.print("<DATE>");       logToken(t);
+        break;
+      case AMOUNT:
+        t = jj_consume_token(AMOUNT);
+                       out.print("<MONTANT>");    logToken(t);
+        break;
+      case PERSON:
+        t = jj_consume_token(PERSON);
+                       out.print("<PERSONNE>");   logToken(t);
+        break;
+      case WORD:
+        t = jj_consume_token(WORD);
+                       out.print(t.image);        logToken(t);
+        break;
+      case OTHER:
+        t = jj_consume_token(OTHER);
+                       out.print(t.image);        logToken(t);
+        break;
+      default:
+        jj_la1[1] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
     jj_consume_token(0);
+      out.flush();
   }
 
   /** Generated Token Manager. */
@@ -49,13 +100,13 @@ public class Anonymiseur implements AnonymiseurConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[0];
+  final private int[] jj_la1 = new int[2];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {};
+      jj_la1_0 = new int[] {0xfe,0xfe,};
    }
 
   /** Constructor with InputStream. */
@@ -69,7 +120,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -83,7 +134,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -93,7 +144,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -103,7 +154,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -112,7 +163,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -121,7 +172,7 @@ public class Anonymiseur implements AnonymiseurConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -172,12 +223,12 @@ public class Anonymiseur implements AnonymiseurConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[12];
+    boolean[] la1tokens = new boolean[8];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 2; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -186,7 +237,7 @@ public class Anonymiseur implements AnonymiseurConstants {
         }
       }
     }
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 8; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

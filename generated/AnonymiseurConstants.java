@@ -9,19 +9,19 @@ public interface AnonymiseurConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int EMAIL = 5;
+  int EMAIL = 1;
   /** RegularExpression Id. */
-  int PHONE = 6;
+  int PHONE = 2;
   /** RegularExpression Id. */
-  int DATE = 7;
+  int DATE = 3;
   /** RegularExpression Id. */
-  int AMOUNT = 8;
+  int AMOUNT = 4;
   /** RegularExpression Id. */
-  int PERSON = 9;
+  int PERSON = 5;
   /** RegularExpression Id. */
-  int WORD = 10;
+  int WORD = 6;
   /** RegularExpression Id. */
-  int OTHER = 11;
+  int OTHER = 7;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -29,10 +29,6 @@ public interface AnonymiseurConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\" \"",
-    "\"\\t\"",
-    "\"\\r\"",
-    "\"\\n\"",
     "<EMAIL>",
     "<PHONE>",
     "<DATE>",
