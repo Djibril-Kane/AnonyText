@@ -7,3 +7,9 @@ Mot accentué minuscule : éléphant, liberté
 Nom accentué majuscule : Éric Étienne
 Numéro compact : 771234567
 Montant en euros : 1500 EUR
+Jour invalide (00) : 00/06/2026
+Préfixe téléphone invalide : 79 123 45 67
+Montant en dollars : $100
+Montant en euros (symbole) : 1000€
+Sigle en majuscules : ESP
+Email avec sous-domaine : a.b-c+tag@sous.domaine.univ-dakar.sn
