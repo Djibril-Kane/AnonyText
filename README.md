@@ -1,6 +1,6 @@
 # AnonyText
 
-Outil d'anonymisation de textes développé avec **JavaCC** dans le cadre du projet de Compilation — M1 GLSI, ESP Dakar (2025-2026).
+Outil d'anonymisation de textes développé avec **JavaCC**.
 
 Le programme analyse un fichier texte et remplace automatiquement les informations sensibles par des marqueurs anonymisés : `<PERSONNE>`, `<TELEPHONE>`, `<EMAIL>`, `<MONTANT>`, `<DATE>`.
 
